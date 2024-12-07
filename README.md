@@ -1,7 +1,6 @@
 # Expense-Analysis-DashBoard
 The Expense Analysis Dashboard enables users to upload spreadsheets of monthly expenses for automated analysis and visualization. Using Python and Microsoft Azure services, the tool generates insights, trends, and visual representations of financial data. This project empowers users to make informed budgeting decisions through accessible, data-driven dashboards.
 
-
 # Skills Learning
 **Data Analysis**: Handling and analyzing spreadsheet data using Python (pandas, numpy).  
 **Data Visualization**: Creating compelling visualizations with plotly, matplotlib, and seaborn.  
@@ -9,3 +8,4 @@ The Expense Analysis Dashboard enables users to upload spreadsheets of monthly e
 **Backend Development**: Automating workflows with Python and Azure integrations.  
 **Frontend Development**: Designing dashboards with Streamlit/Dash.  
 **Deployment**: Hosting applications on Azure and ensuring smooth user interactions.
+
