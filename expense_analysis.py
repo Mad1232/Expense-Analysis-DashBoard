@@ -55,6 +55,7 @@ monthly_columns = df.loc[:, df.columns != 'Category']  # Exclude the "Category" 
 
 #Find the most popular category each month
 categories = df["Category"]
+print(categories)
 
 # Iterate over monthly columns to determine the top category per month
 for month in monthly_columns:
