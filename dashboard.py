@@ -5,12 +5,18 @@ import streamlit as st
 import plotly.express as px
 import numpy as np
 from sklearn.linear_model import LinearRegression
+import plotly.graph_objects as go
 
 # Tuple to store results: [(month_name, popular_category, category spending, total_spending)]
 results = []
 
 #array to store months that have more spending than needed
 alert_months = []
+
+#predefined needs & wants
+needs = {"Education", "Rent", "Groceries", "Utilities", "Gas/Car Wash"}
+wants = {"Restaurants", "Shopping", "Clothes/Shoes", "Clothing", "Entertainment", "Subscriptions", "Hair/Beauty", "Flights/Hotels", "Vacation"}
+
 # Filepath to the dataset
 filepath = 'Annual_Budget.csv'
 pd.options.display.max_rows = 9999  # To Display the entire DataFrame
@@ -71,7 +77,7 @@ categories = df["Category"]
 for month in monthly_columns:
     max_spending_index = df[month].idxmax()  # Index of the maximum spending in the current month
     popular_category = categories[max_spending_index]  # Corresponding category name
-    category_spending = df[month].iloc[max_spending_index]  # Spending in the most popular category for the current month
+    popular_category_spending = df[month].iloc[max_spending_index]  # Spending in the most popular category for the current month
     total_spending = df[month].sum()  # Total spending in the current month
 
     #Calculate which months, total spending is more than needed
@@ -79,7 +85,7 @@ for month in monthly_columns:
     if(total_spending > threshold):
         alert_months.append(month)
     # Append the result as a tuple (month, category, total_spending)
-    results.append((month, popular_category, category_spending, total_spending))
+    results.append((month, popular_category, popular_category_spending, total_spending))
 
 # Convert the list of tuples into a DataFrame
 results_df = pd.DataFrame(results, columns=["Month", "Popular Category", "Category Spending", "Total Spending"])
@@ -248,4 +254,66 @@ fig = px.line(
 )
 
 # Show the plot
+st.plotly_chart(fig)
+
+# Initialize an empty list to store the total spending on needs/wants for each month
+monthly_needs_spending_list = []
+monthly_wants_spending_list = []
+
+# Iterate through each month in the monthly columns
+for month in monthly_columns:
+    # Initialize total spending for this month
+    total_needs_spending = 0
+    total_wants_spending = 0
+    # Iterate through each category in the "needs" set (e.g., Education, Rent, Groceries, etc.)
+    for need_category in needs:
+        # Check if the current need category exists in the DataFrame
+        if need_category in df['Category'].values:
+            # Add the total spending for the current need category in this month to the total_needs_spending
+            total_needs_spending += df.loc[df['Category'] == need_category, month].sum()
+    
+    # Append the total spending for the current month to the monthly_needs_spending_list
+    monthly_needs_spending_list.append(total_needs_spending) #Now, monthly_needs_spending_list contains the total spending for each month on needs (Jan = index 0, Dec = index 11)
+
+    for want_category in wants:
+        if want_category in df['Category'].values:
+            total_wants_spending += df.loc[df['Category'] == want_category, month].sum()
+
+    monthly_wants_spending_list.append(total_wants_spending)
+
+
+#Stacked Bar Chart: Needs Vs Wants
+st.markdown("""
+### Needs Vs Wants
+This will analyze your spending on Needs and Wants for each month and give you suggestions and alerts to save money! 
+""")
+
+# Create a stacked bar chart using Plotly
+fig = go.Figure()
+
+fig.add_trace(go.Bar(
+    x=month_order,
+    y=monthly_needs_spending_list,
+    name='Needs',
+    marker_color='yellow'
+))
+
+fig.add_trace(go.Bar(
+    x=month_order,
+    y=monthly_wants_spending_list,
+    name='Wants',
+    marker_color='purple'
+))
+
+# Update the layout for the chart
+fig.update_layout(
+    title="Needs vs Wants Spending",
+    xaxis_title="Month",
+    yaxis_title="Spending ($)",
+    barmode='stack',  # This makes the bars stacked
+    xaxis=dict(tickmode='array', tickvals=month_order),  # Ensure months appear as labels
+    legend_title="Category"
+)
+
+# Display the Plotly chart
 st.plotly_chart(fig)
