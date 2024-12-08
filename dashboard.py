@@ -1,6 +1,8 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import streamlit as st
+import plotly.express as px
 
 
 # Tuple to store results: [(month_name, popular_category, category spending, total_spending)]
@@ -8,21 +10,20 @@ results = []
 
 # Filepath to the dataset
 filepath = 'Annual_Budget.csv'
-pd.options.display.max_rows = 9999  # Display the entire DataFrame
+pd.options.display.max_rows = 9999  # To Display the entire DataFrame
 
 #Loading the data
 try:
     df = pd.read_csv(filepath)
-    print(df)
 except FileNotFoundError:
-    print(f"File: '{filepath}' could not be located.")
-    exit()  # Exit if the file is not found
+    st.error(f"File: '{filepath}' could not be located.")
+    st.stop()  # Exit if the file is not found
 except pd.errors.ParserError:
-    print(f"Filepath: '{filepath}' couldn't be parsed successfully.")
-    exit()
+    st.error(f"Filepath: '{filepath}' couldn't be parsed successfully.")
+    st.stop()
 except Exception as e:
-    print(f"An unexpected error occurred while loading the file: {e}")
-    exit()
+    st.error(f"An unexpected error occurred while loading the file: {e}")
+    st.stop()
 
 
 #Cleaning the data
@@ -39,16 +40,15 @@ try:
     # Round numeric values to 1 decimal place
     df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].round(1)
 
-    print('\nCleaned data:\n', df)
+    st.write('### Cleaned Data:')
+    st.write(df)
 
 except ValueError as e:
-    print(f"Error while cleaning the data: {e}")
-    exit()
+    st.error(f"Error while cleaning the data: {e}")
+    st.stop()
 except Exception as e:
-    print(f"An unexpected error occurred while cleaning: {e}")
-    exit()
-
-print('\n\n\n')
+    st.error(f"An unexpected error occurred while cleaning: {e}")
+    st.stop()
 
 #Calculate monthly total spending
 monthly_columns = df.loc[:, df.columns != 'Category']  # Exclude the "Category" column
@@ -66,7 +66,37 @@ for month in monthly_columns:
     # Append the result as a tuple (month, category, total_spending)
     results.append((month, popular_category, category_spending, total_spending))
 
+# Convert the list of tuples into a DataFrame
+results_df = pd.DataFrame(results, columns=["Month", "Popular Category", "Category Spending", "Total Spending"])
+
 #Display the results
-print("\nMost Popular Category Each Month:")
-for month, category, cat_spending, total in results:
-    print(f"In {month}: {category}({cat_spending}) was the top category with total monthly spending of ${total:.1f}")
+
+# Graph1 : Total Monthly Spending Overview
+monthly_totals = df.sum(numeric_only=True)
+fig1 = px.bar(
+    x=monthly_totals.index,
+    y=monthly_totals.values,
+    title="Total Monthly Spending",
+    labels={"x": "Month", "y": "Total Spending ($)"}
+)
+st.plotly_chart(fig1)
+
+# order of the months 
+month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+#custom color sequence 
+color_sequence = px.colors.qualitative.Plotly
+
+
+# Graph2 : Most Popular Cateogry Each Month
+fig2 = px.bar(
+    results_df,
+    x="Month",
+    y="Category Spending",
+    color="Popular Category",
+    title="Most Popular Category Spending Per Month",
+    labels={"Category Spending": "Spending ($)"},
+    category_orders={"Month": month_order},
+    color_discrete_sequence = color_sequence #the custom color sequence
+)
+st.plotly_chart(fig2)
