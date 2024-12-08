@@ -9,3 +9,8 @@ The Expense Analysis Dashboard enables users to upload spreadsheets of monthly e
 **Frontend Development**: Designing dashboards with Streamlit/Dash.  
 **Deployment**: Hosting applications on Azure and ensuring smooth user interactions.
 
+## Try it Now 🚀
+
+Explore the live application:  
+[Expense Analysis Dashboard](https://mad1232-expense-analysis-dashboard-dashboard-lyxckq.streamlit.app/)
+
