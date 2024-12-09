@@ -5,7 +5,6 @@ import plotly.express as px
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import plotly.graph_objects as go
-from prophet import Prophet
 
 
 # Tuple to store results: [(month_name, popular_category, category spending, total_spending)]
