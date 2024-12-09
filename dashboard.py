@@ -5,6 +5,8 @@ import plotly.express as px
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import plotly.graph_objects as go
+from prophet import Prophet
+
 
 # Tuple to store results: [(month_name, popular_category, category spending, total_spending)]
 results = []
@@ -74,15 +76,24 @@ if uploaded_file:
     df_filtered = df.loc[:, (df != 0).any(axis=0)]
     #Cleaning the data
     try:
-    # Remove non-numeric characters (including commas) from all columns except "Category" 
-        df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].replace({r'[^\d.]': ''}, regex=True) 
-        # Convert cleaned columns to numeric values, replacing invalid entries with NaN 
-        df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].apply(pd.to_numeric, errors='coerce') 
-        # Replace NaN with 0 for consistency 
-        df.fillna(0, inplace=True) 
-        # Round numeric values to 1 decimal place 
-        df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].round(1)
+    # Explicitly replace commas with an empty string
+        df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].replace(r',', '', regex=True)
 
+        # Remove currency symbols (e.g., $, £, ¥, ₹) and commas from the numeric columns
+        df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].replace(r'[\$\£\¥\₹,]', '', regex=True)
+
+        # Remove any remaining non-numeric characters except for periods
+        df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].replace(r'[^\d.]', '', regex=True)
+
+        # Convert cleaned columns to numeric values, replacing invalid entries with NaN
+        df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].apply(pd.to_numeric, errors='coerce')
+
+        # Replace NaN with 0 for consistency
+        df.fillna(0, inplace=True)
+
+        # Round numeric values to 2 decimal place
+        df.loc[:, df.columns != 'Category'] = df.loc[:, df.columns != 'Category'].round(2)
+        
         st.write('### Cleaned Data:')
         st.write(df)
 
@@ -246,9 +257,11 @@ if uploaded_file:
     This will analyze future months spending prediction based on current trends. Makes use of Linear Regression to help predict. 
     """)
 
-    # Prepare data for linear regression
+
+        # Prepare data for linear regression
     month_numbers = np.array(range(len(monthly_totals))).reshape(-1, 1)  # Months as numeric values (0, 1, 2, ...)
     spending_values = monthly_totals.values.reshape(-1, 1)  # Total spending for each month
+
     # Apply Linear Regression
     model = LinearRegression()
     model.fit(month_numbers, spending_values)
@@ -274,7 +287,7 @@ if uploaded_file:
         forecast_df,
         x="Month",
         y="Spending",
-        title="Spending Analysis Future Trends",
+        title="Spending Analysis & Future Trends",
         labels={"Month": "Month", "Spending": "Total Spending"},
         markers=True
     )
