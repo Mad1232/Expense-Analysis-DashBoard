@@ -28,15 +28,29 @@ To begin, please upload a file in **.csv** format. You can download our sample f
 """)
 
 # File download section
-SAMPLE_FILE_PATH = "samplefile.csv"
+SAMPLE_FILE_PATH = "sample_file.csv"
 with open(SAMPLE_FILE_PATH, "rb") as file:
     sample_file_data = file.read()
 
-st.write("#### Download the sample file here:")
+TEST_FILE_PATH = "testfile.csv"
+with open(TEST_FILE_PATH, "rb") as file:
+    test_file_data = file.read()
+
+st.write("#### Download the sample file or test file here:")
+
+# Download button for samplefile.csv
 st.download_button(
     label="Download Sample File",
     data=sample_file_data,
     file_name="sample_file.csv",
+    mime="text/csv"
+)
+
+# Download button for testfile.csv
+st.download_button(
+    label="Download Test File",
+    data=test_file_data,
+    file_name="testfile.csv",
     mime="text/csv"
 )
 
