@@ -72,5 +72,5 @@ jobs:
       - name: Configure Startup Command
         run: |
           az webapp config set --name Expense-budget-tracker \
-                               --resource-group <your-resource-group> \
+                               --resource-group Expense-budget-tracker_group \
                                --startup-file "python3 -m streamlit run dashboard.py --server.port \$PORT --server.address 0.0.0.0"
