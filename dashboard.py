@@ -5,6 +5,8 @@ import plotly.express as px
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import plotly.graph_objects as go
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 
 # Tuple to store results: [(month_name, popular_category, category spending, total_spending)]
@@ -198,7 +200,7 @@ if uploaded_file:
             ### Total Monthly Spending Overview
             This chart provides an overview of the total spending for each month. The values are aggregated from the data, showing how spending has varied month by month. The x-axis represents each month, while the y-axis shows the total amount spent for that particular month.
             """)
-            monthly_totals = df.sum(numeric_only=True)
+            monthly_totals = df.sum(numeric_only=True) #sum of each column 
 
             fig1 = px.bar(
                 x=monthly_totals.index,
@@ -295,30 +297,49 @@ if uploaded_file:
 
             #LineGraph2: Predict Spending for Future Months Based on Current Trends
             st.markdown("""
-            ### Spending Analysis for Future Months
-            This will analyze future months spending prediction based on current trends. Makes use of Linear Regression to help predict. 
+            ### Future Spending Analysis
+            This section provides a forecast of your spending for the upcoming months, based on current trends. We utilize advanced techniques such as Linear Regression and AI/ML to predict your future expenditures with enhanced accuracy.
             """)
 
 
-                # Prepare data for linear regression
-            month_numbers = np.array(range(len(monthly_totals))).reshape(-1, 1)  # Months as numeric values (0, 1, 2, ...)
-            spending_values = monthly_totals.values.reshape(-1, 1)  # Total spending for each month
+                        #Prepare for future predictions
 
-            # Apply Linear Regression
-            model = LinearRegression()
-            model.fit(month_numbers, spending_values)
+            # Create a DataFrame from the Series 
+            mydata = pd.DataFrame(monthly_totals.values, index=monthly_totals.index, columns=["Spending"]) 
 
-            # Predict future months (next 12 months)
-            future_months = np.array(range(len(monthly_totals), len(monthly_totals) + 12)).reshape(-1, 1)
+            # Filter out columns where the total spending is zero 
+            mydata = mydata[mydata["Spending"] != 0]
+
+            #make a training data
+            training_data = mydata
+
+            # Convert index (months) to numerical values 
+            months = np.arange(len(training_data)).reshape(-1, 1) 
+
+            # Features (X) and target (y) 
+            X = months 
+            y = training_data["Spending"]
+
+            # Train-test split (0.2 = 20% for testing, 80% for training), random_state = 42 means data sets for testing and training will vary each time
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state = 42)  
+
+            # Train the model 
+            model = LinearRegression() 
+            model.fit(X_train, y_train) 
+
+            # Predict for the next 5 months (Future Month 1 to Future Month 5) 
+            future_months = np.arange(len(training_data), len(training_data) + 5).reshape(-1, 1) 
             future_predictions = model.predict(future_months)
 
-            # Ensure predicted values are >= 0
-            future_predictions = np.maximum(future_predictions, 0)  # Replace any negative values with 0
+            # Ensure predicted values are >= 0 
+            future_predictions = np.maximum(future_predictions, 0) 
 
-            # Create a new DataFrame for plotting
-            forecast_months = [*monthly_totals.index, *[f"Future Month {i+1}" for i in range(12)]]
-            forecast_spending = np.concatenate([monthly_totals.values, future_predictions.flatten()])
-
+            # Append future predictions to the original data 
+            forecast_months = list(training_data.index) + [f"Future Month {i+1}" for i in range(5)] 
+            forecast_spending = list(training_data["Spending"]) + list(future_predictions) 
+            forecast_df = pd.DataFrame({ "Month": forecast_months, "Spending": forecast_spending }) 
+            
+            # Display the forecasted data 
             forecast_df = pd.DataFrame({
                 "Month": forecast_months,
                 "Spending": forecast_spending
@@ -336,6 +357,7 @@ if uploaded_file:
 
             # Show the plot
             st.plotly_chart(fig)
+
 
             # Initialize an empty list to store the total spending on needs/wants for each month
             monthly_needs_spending_list = []
@@ -442,11 +464,6 @@ if uploaded_file:
             st.write("- **Build an Emergency Fund**: Ensure you have at least 3-6 months' worth of expenses saved for unexpected events.")
 
 
+
 else:
     st.info("Please upload a file to proceed.")
-
-
-
-
-
-
