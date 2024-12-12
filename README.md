@@ -13,5 +13,6 @@ The Expense Analysis Dashboard enables users to upload spreadsheets of monthly e
 
 Explore the live application:  
 [Expense Analysis Dashboard](https://mad1232-expense-analysis-dashboard-dashboard-lyxckq.streamlit.app/)
+
 Explore it in Microsoft Azure:
 [Expense Analysis Dashboard](https://expense-budget-tracker-cba5hzgzd9dqf6ft.eastus-01.azurewebsites.net/)
