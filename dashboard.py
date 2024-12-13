@@ -434,7 +434,7 @@ if uploaded_file:
 
             # Display the insights
         # Display the insights in a unique way 
-            insights_text = ( f"- **Average monthly spending on wants**: {avg_wants_spending} ({percentage_avg_wants}%)\n" f"- **Average monthly spending on needs**: {avg_needs_spending} ({percentage_avg_needs}%)\n" ) 
+            insights_text = ( f"- **Average monthly spending on needs**: {avg_needs_spending} ({percentage_avg_needs}%)\n" f"- **Average monthly spending on wants**: {avg_wants_spending} ({percentage_avg_wants}%)\n" ) 
             st.write(insights_text)
 
             # Insights based on the 50/30/20 rule
@@ -452,7 +452,23 @@ if uploaded_file:
                             "Evaluate discretionary expenses such as dining out, entertainment, or shopping.")
                 if percentage_avg_needs + percentage_avg_wants > 80:
                     st.write("- Your combined spending on needs and wants exceeds 80% of your income. "
+            
                             "Try to reallocate some funds towards savings or investments.")
+                    
+
+            #Insights based on their own expectations
+            if(percentage_avg_needs > percentage_needs or percentage_avg_wants > percentage_wants):
+                st.write("⚠️ **Your spending deviates from your expectations.**")
+                if(percentage_avg_needs > percentage_needs):
+                    st.write(f"- You are spending **{(percentage_avg_needs).round(1)}% (needs) on average** when you wished to allocate only **{(percentage_needs)}%**. "
+                                                "Consider reducing fixed expenses like rent, utilities, or groceries if possible.")
+
+                if(percentage_avg_wants > percentage_wants):
+                                    st.write(f"- You are spending **{(percentage_avg_wants).round(1)}% (wants) on average** when you wished to allocate only **{(percentage_wants)}%**. "
+                                                                "Evaluate discretionary expenses such as dining out, entertainment, or shopping.")
+            else:
+                st.write("✅ **You're aligned with your personal budgeting expectations!**")
+                st.write("This means that you are matching your own personal goals on allocating the needs and wants.")
 
             # Suggestions for improvement
             st.write("### Suggestions for Improvement")
