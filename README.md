@@ -3,7 +3,8 @@ The Expense Analysis Dashboard enables users to upload spreadsheets of monthly e
 
 # Skills Learning
 **Data Analysis**: Handling and analyzing spreadsheet data using Python (pandas, numpy).  
-**Data Visualization**: Creating compelling visualizations with plotly, matplotlib, and seaborn.  
+**Data Visualization**: Creating compelling visualizations with plotly, matplotlib, machine learning.  
+**Machine Learning**: Training models to accurately predict spending totals for the future.  
 **Azure Cloud Services**: Configuring Azure Blob Storage, Functions, and App Service.  
 **Backend Development**: Automating workflows with Python and Azure integrations.  
 **Frontend Development**: Designing dashboards with Streamlit/Dash.  
