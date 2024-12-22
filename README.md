@@ -1,4 +1,4 @@
-# Expense Analysis Dashboard  
+# Expense Analysis Dashboard
 
 The **Expense Analysis Dashboard** is a web application that enables users to upload spreadsheets of monthly expenses for automated analysis and visualization.  
 Using **Python** and **Microsoft Azure** services, the tool provides:  
