@@ -359,6 +359,57 @@ if uploaded_file:
             st.plotly_chart(fig)
 
 
+            #LineGraph3: Predict Spending for Future Months Based on Current Trends
+            st.markdown("""
+            ### How You Compare to Others?
+            This section compares your spending with the average spending of 10 individuals from our dataset and forecasts future trends for both. Using advanced techniques like Decision Forest Tree Regression, we provide accurate predictions of future expenditures.
+            """)
+
+            average_df = []
+            #Loading the data
+            try:
+                file_df = pd.read_csv('average_spending.csv')
+                average_df.append(file_df)
+
+            except Exception as e:
+                st.error(f"An unexpected error occurred while loading the file: {e}")
+                st.stop()
+
+            combined_avg_df = pd.concat(average_df,ignore_index=True)
+
+            # Create a combined DataFrame to include both Person's spending and the average Spending
+            combined_data = pd.DataFrame({
+                "Month": forecast_df["Month"].tolist() + combined_avg_df["Month"].tolist(),
+                "Spending": forecast_df["Spending"].tolist() + combined_avg_df["AvgSpending"].tolist(),
+                "Category": ["Your Spending"] * len(forecast_df) + ["Average Spending"] * len(combined_avg_df)
+            })
+
+            # Plot the data with different colors for each category
+            avg_fig = px.line(
+                combined_data,
+                x="Month",
+                y="Spending",
+                color="Category",  # Color the lines based on the 'Category' column
+                title="Spending Analysis & Future Trends (You Vs Average)",
+                labels={"Month": "Month", "Spending": "Total Spending"},
+                markers=True
+            )
+
+            # Customize colors for specific categories
+            avg_fig.update_traces(
+                line=dict(width=2),  # Adjust line width
+                selector=dict(name="Your Spending"),
+                line_color="blue"
+            )
+            avg_fig.update_traces(
+                line=dict(width=2),  # Adjust line width
+                selector=dict(name="Average Spending"),
+                line_color="red"
+            )
+
+            # Show the plot
+            st.plotly_chart(avg_fig)
+
             # Initialize an empty list to store the total spending on needs/wants for each month
             monthly_needs_spending_list = []
             monthly_wants_spending_list = []
