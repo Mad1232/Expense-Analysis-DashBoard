@@ -44,7 +44,7 @@ Explore it in Microsoft Azure:
 - Designed and deployed an end-to-end machine learning pipeline in Azure.  
 
 ### Frontend Development  
-- Designed interactive dashboards and applications using `Streamlit` and `Dash`.  
+- Designed interactive dashboards and applications using `Streamlit`.  
 - Focused on creating intuitive user interfaces to visualize complex data.  
 
 ### Deployment  
