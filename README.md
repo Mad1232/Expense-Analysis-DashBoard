@@ -17,7 +17,7 @@ Explore the live application:
 
 Explore it in Microsoft Azure:  
 [Expense Analysis Dashboard (Azure)](https://expense-budget-tracker-cba5hzgzd9dqf6ft.eastus-01.azurewebsites.net/)
-
+- Update!!: Removed deplyment in Azure due to charges being incurred in the account.   
 ---
 
 # Skills and Learning  
