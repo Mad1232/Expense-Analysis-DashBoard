@@ -10,16 +10,19 @@ By leveraging machine learning models, this project empowers users to make infor
 
 ---
 
-## Try it Now 🚀
+## Try it Now 🚀  
 
 Explore the live application:  
 
 - [YouTube](https://www.youtube.com/watch?v=-2NkJLAyxYk&ab_channel=MadFury)  
-- [Expense Analysis Dashboard (Streamlit)](https://mad1232-expense-analysis-dashboard-dashboard-lyxckq.streamlit.app/)
+- [Expense Analysis Dashboard (Streamlit)](https://mad1232-expense-analysis-dashboard-dashboard-lyxckq.streamlit.app/)  
 
-Explore it in Microsoft Azure:  
-[Expense Analysis Dashboard (Azure)](https://expense-budget-tracker-cba5hzgzd9dqf6ft.eastus-01.azurewebsites.net/)
-- Update!!: Removed deployment in Azure due to charges being incurred in the account.   
+### Previously on Microsoft Azure:  
+The Expense Analysis Dashboard was also deployed in Microsoft Azure:  
+~~[Expense Analysis Dashboard (Azure)](https://expense-budget-tracker-cba5hzgzd9dqf6ft.eastus-01.azurewebsites.net/)~~  
+
+**Update**: Deployment in Azure has been removed due to charges being incurred on the account.  
+  
 ---
 
 # Skills and Learning  
